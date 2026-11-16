@@ -39,6 +39,7 @@ for m in re.finditer(r"<(?:[^>]*)>\s*(\d{4})\s+([A-Z0-9][^<]*?)\s*-\s*[^<]*<|<tr
     if m.group(1): cur=m.group(1); continue
     r=rows("<tr class='tm-body'>"+m.group(3)+"</tr>")[0]
     if cur and len(r)>=7: up.append(dict(code=cur,home=r[0],away=r[1],date=r[2],time=r[3],venue=r[4],addr=r[5],town=r[6]))
+if len(data)<50 or sum(len(g['standings']) for g in data)<300: raise SystemExit('GUARDIA_VACIO: origen sin datos validos (mantenimiento?), no se publica')
 out=dict(updated=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='minutes'),groups=data,upcoming=up)
 json.dump(out,open('data.json','w'),ensure_ascii=False)
 print(len(data),'groups',sum(len(g['standings']) for g in data),'teams',len(up),'upcoming',[g['name'] for g in data][:3])
